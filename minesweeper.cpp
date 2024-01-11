@@ -1,26 +1,17 @@
+#ifdef __unix__         
+    #define CLEAR "clear"
+#elif defined(_WIN32)
+    #define CLEAR "cls"
+#endif
+
 #include <bits/stdc++.h>
+#include <conio.h>
 using namespace std;
-#define N 10
-#define M 2
 
-/*
-        ╔═══╦═══╦═══╦═══╦═══╗
-        ║>1<║ 0 ║ 0 ║ 0 ║ 0 ║
-        ╠═══╬═══╬═══╬═══╬═══╣
-        ║ 1 ║ 0 ║ 0 ║ 0 ║ 0 ║
-        ╠═══╬═══╬═══╬═══╬═══╣
-        ║ 1 ║ 0 ║ 0 ║ 0 ║ 0 ║
-        ╠═══╬═══╬═══╬═══╬═══╣
-        ║ 1 ║ 0 ║ 0 ║ 0 ║ 0 ║
-        ╠═══╬═══╬═══╬═══╬═══╣
-        ║ 1 ║ 0 ║ 0 ║ 0 ║ 0 ║
-        ╚═══╩═══╩═══╩═══╩═══╝
-*/
-
-vector<pair<int, int>> dirs_diag = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}, dirs_cross = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 vector<vector<pair<int, bool>>> mp;
 set<pair<int, int>> flags;
-int valid_flags = 0, total_flags = 0;
+int valid_flags = 0, total_flags = 0, N, M;
+vector<pair<int, int>> directions = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
 void populate(){
     srand(time(0));
@@ -44,27 +35,33 @@ void populate(){
         for(int j = 0; j < N; j++){
             if(mp[i][j].first == -1) continue;
             for(int k = 0; k < 8; k++){
-                int cx = j + dirs_diag[k].first, cy = i + dirs_diag[k].second;
+                int cx = j + directions[k].first, cy = i + directions[k].second;
                 if(cx >= 0 && cx < N && cy >= 0 && cy < N && mp[cy][cx].first == -1) mp[i][j].first++;
             }
         }
     }
 }
 
-
 void draw(int x, int y, bool mode = false){
-    system("clear");
+    system(CLEAR);
+    cout << " ____                                _\n"
+            "|  _ \\                              (_)\n"
+            "| |_) |_   _ ___  ___ __ _ _ __ ___  _ _ __   __ _ ___ \n"
+            "|  _ <| | | / __|/ __/ _` | '_ ` _ \\| | '_ \\ / _` / __|\n"
+            "| |_) | |_| \\__ \\ (_| (_| | | | | | | | | | | (_| \\__ \\ \n"
+            "|____/ \\__,_|___/\\___\\__,_|_| |_| |_|_|_| |_|\\__,_|___/\n\n";
+    cout << "Controles:\nArriba: W\tIzquierda: A\tAbajo: S\tDerecha: D\nCavar: Q\tBandera: E\tSalir: X\n\nBanderas: " << total_flags << "/" << M << "\n\n";
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
-            if(i == 0 && j == 0) cout << "╔═══";
-            else if(j == 0) cout << "╠═══";
-            else if(i == 0) cout << "╦═══";
-            else cout << "╬═══";
-            if(i == 0 && j == N-1) cout << "╗\n";
-            else if(j == N-1) cout << "╣\n";
+            if(i == 0 && j == 0) cout << char(969) << char(973) << char(973) << char(973);
+            else if(j == 0) cout << char(972) << char(973) << char(973) << char(973);
+            else if(i == 0) cout << char(971) << char(973) << char(973) << char(973);
+            else cout << char(974) << char(973) << char(973) << char(973);
+            if(i == 0 && j == N-1) cout << char(955) << '\n';
+            else if(j == N-1) cout << char(953) << '\n';
         }
         for(int j = 0; j < N; j++){
-            cout << "║" << ((i == y && j == x) ? ">" : " ");
+            cout << char(954) << ((i == y && j == x) ? ">" : " ");
             if(mp[i][j].second) cout << (mp[i][j].first == 0 ? " " : (mode && mp[i][j].first == -1 ? "X" : to_string(mp[i][j].first)));
             else{
                 bool check = true;
@@ -77,13 +74,13 @@ void draw(int x, int y, bool mode = false){
                 if(check) cout << '+';
             }
             cout << (i == y && j == x ? "<" : " ");
-            if(j == N-1) cout << "║\n";
+            if(j == N-1) cout << char(954) << '\n';
         }
     }
     for(int i = 0; i < N; i++){
-        if(i == 0) cout << "╚═══";
-        else if(i == N-1) cout << "╩═══╝\n";
-        else cout << "╩═══";
+        if(i == 0) cout << char(968) << char(973) << char(973) << char(973);
+        else cout << char(970) << char(973) << char(973) << char(973);
+        if(i == N-1) cout << char(956) << '\n';
     }
 }
 
@@ -97,7 +94,7 @@ void bfs(int x, int y){
         mp[cy][cx].second = true;
         if(mp[cy][cx].first != mp[y][x].first) continue;
         for(int i = 0; i < 8; i++){
-            int xx = cx + dirs_diag[i].first, yy = cy + dirs_diag[i].second;
+            int xx = cx + directions[i].first, yy = cy + directions[i].second;
             if(xx >= 0 && xx < N && yy >= 0 && yy < N && !mp[yy][xx].second) q.push({xx, yy});
         }
     }
@@ -105,7 +102,8 @@ void bfs(int x, int y){
 
 void end_game(bool win){
     if(win){
-        cout << "\nGanaste let's go\n";
+        draw(-1, -1, true);
+        cout << "\nGanaste let's goooo\n";
     }
     else{
         for(int i = 0; i < N; i++){
@@ -121,53 +119,68 @@ void end_game(bool win){
 }
 
 int main(){
+    system(CLEAR);
+    cout << " ____                                _\n"
+            "|  _ \\                              (_)\n"
+            "| |_) |_   _ ___  ___ __ _ _ __ ___  _ _ __   __ _ ___ \n"
+            "|  _ <| | | / __|/ __/ _` | '_ ` _ \\| | '_ \\ / _` / __|\n"
+            "| |_) | |_| \\__ \\ (_| (_| | | | | | | | | | | (_| \\__ \\ \n"
+            "|____/ \\__,_|___/\\___\\__,_|_| |_| |_|_|_| |_|\\__,_|___/\n\n";
+    cout << "Tama" << char(932) << "o del mapa: ";
+    cin >> N;
+    cout << "\nCantidad de minas (max. " << N*N << "): ";
+    cin >> M;
     populate();
-    int cx = 0, cy = 0;
-    while(1){
-        draw(cx, cy);
-        char op; cin >> op;
+    int x = 0, y = 0;
+    while(true){
+        draw(x, y);
+        char op = _getch();
         switch(op){
             case 'w':
-                cy = max(0, cy-1);
+                y = max(0, y-1);
                 break;
             case 'a':
-                cx = max(0, cx-1);
+                x = max(0, x-1);
                 break;
             case 's':
-                cy = min(N-1, cy+1);
+                y = min(N-1, y+1);
                 break;
             case 'd':
-                cx = min(N-1, cx+1);
+                x = min(N-1, x+1);
                 break;
             case 'q':
-                if(mp[cy][cx].first == -1){
+                if(mp[y][x].first == -1){
                     end_game(false);
                     return 0;
                 }
-                else if(mp[cy][cx].first == 0) bfs(cx, cy);
-                else mp[cy][cx].second = true;
+                else if(mp[y][x].first == 0) bfs(x, y);
+                else mp[y][x].second = true;
+                if(flags.find({x, y}) != flags.end()){
+                    flags.erase({x, y});
+                    total_flags--;
+                }
                 break;
             case 'e':
-                if(mp[cy][cx].second) continue;
-                else if(flags.find({cx, cy}) == flags.end()){
-                    flags.insert({cx, cy});
+                if(mp[y][x].second) continue;
+                else if(flags.find({x, y}) == flags.end()){
+                    flags.insert({x, y});
                     total_flags++;
-                    if(mp[cy][cx].first == -1) valid_flags++;
-                    if(total_flags == valid_flags && valid_flags == M){
-                        end_game(true);
-                        return 0;
-                    }
+                    if(mp[y][x].first == -1) valid_flags++;
                 }
                 else{
-                    flags.erase({cx, cy}); 
+                    flags.erase({x, y}); 
                     total_flags--;
-                    if(mp[cy][cx].first == -1) valid_flags--; 
+                    if(mp[y][x].first == -1) valid_flags--; 
                 }
                 break;
+            case 'x':
+                return 0;
             default:
                 break;
         }
+        if(total_flags == valid_flags && valid_flags == M){
+            end_game(true);
+            return 0;
+        }
     }
-    draw(0, 0);
-    return 0;
 }
