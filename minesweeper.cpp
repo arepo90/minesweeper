@@ -1,3 +1,8 @@
+/*
+    Project in C++: Buscaminas
+    Miguel Esteban Martinez Villegas | 12-2
+*/
+
 #ifdef __unix__         
     #define CLEAR "clear"
 #elif defined(_WIN32)
