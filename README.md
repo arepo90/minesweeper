@@ -1,6 +1,6 @@
 # Proyecto C++
 
-## Buscaminas
+### Buscaminas
 
 Esteban Martinez
 Arepo90
