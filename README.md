@@ -1,6 +1,4 @@
-# Proyecto C++
-
-### Buscaminas
+# Proyecto C++ | Buscaminas
 
 Esteban Martinez
 
