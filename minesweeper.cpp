@@ -20,10 +20,7 @@ vector<pair<int, int>> directions = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}
 
 void populate(){
     srand(time(0));
-    vector<pair<int, bool>> temp;
-    for(int i = 0; i < N; i++){
-        temp.push_back({0, false});
-    }
+    vector<pair<int, bool>> temp(N, {0, false});
     for(int i = 0; i < N; i++){
         mp.push_back(temp);
     }
@@ -69,14 +66,15 @@ void draw(int x, int y, bool mode = false){
             cout << char(954) << ((i == y && j == x) ? ">" : " ");
             if(mp[i][j].second) cout << (mp[i][j].first == 0 ? " " : (mode && mp[i][j].first == -1 ? "X" : to_string(mp[i][j].first)));
             else{
-                bool check = true;
+                bool temp = true;
                 for(auto it = flags.begin(); it != flags.end(); it++){
                     if(i == it->second && j == it->first){
                         cout << '!';
-                        check = false;
+                        temp = false;
+                        break;
                     }
                 }
-                if(check) cout << '+';
+                if(temp) cout << '+';
             }
             cout << (i == y && j == x ? "<" : " ");
             if(j == N-1) cout << char(954) << '\n';
